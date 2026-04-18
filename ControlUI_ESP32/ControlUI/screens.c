@@ -45,7 +45,7 @@ void create_screen_main() {
             lv_obj_t *obj = lv_slider_create(parent_obj);
             objects.ses_slider = obj;
             lv_obj_set_pos(obj, 374, 26);
-            lv_obj_set_size(obj, 637, 10);
+            lv_obj_set_size(obj, 600, 10);
             lv_obj_add_event_cb(obj, action_eylemsel, LV_EVENT_VALUE_CHANGED, (void *)1);
         }
         {
@@ -53,7 +53,7 @@ void create_screen_main() {
             lv_obj_t *obj = lv_slider_create(parent_obj);
             objects.ekran_slider = obj;
             lv_obj_set_pos(obj, 374, 81);
-            lv_obj_set_size(obj, 637, 10);
+            lv_obj_set_size(obj, 600, 10);
             lv_obj_add_event_cb(obj, action_eylemsel, LV_EVENT_VALUE_CHANGED, (void *)2);
         }
         {
@@ -126,11 +126,34 @@ void create_screen_main() {
             lv_label_set_text(obj, "Pil Seviyesi");
         }
         {
+            /*
             // PilProgressbar
             lv_obj_t *obj = lv_bar_create(parent_obj);
             objects.pil_progressbar = obj;
             lv_obj_set_pos(obj, 374, 132);
-            lv_obj_set_size(obj, 637, 41);
+            lv_obj_set_size(obj, 600, 41);
+            */
+            // TempChart
+            lv_obj_t *obj = lv_chart_create(parent_obj);
+            objects.temp_chart = obj;
+            lv_obj_set_pos(obj, 512, 211);
+            lv_obj_set_size(obj, 500, 330);
+            lv_obj_clear_flag(obj, LV_OBJ_FLAG_CLICKABLE);
+
+            // Y ekseni 0 - 120 aralığı
+            lv_chart_set_range(obj, LV_CHART_AXIS_PRIMARY_Y, 0, 120);
+
+            // Sol eksen (Y) üzerinde değerler ve tick'ler
+            lv_chart_set_axis_tick(obj,
+                                LV_CHART_AXIS_PRIMARY_Y,
+                                10,   // ana bölme
+                                5,    // ara bölme
+                                5,    // ana tick uzunluğu
+                                3,    // ara tick uzunluğu
+                                true, // etiketleri göster
+                                40);  // etiket alanı genişliği
+            // Daha okunabilir çizgiler
+            lv_chart_set_div_line_count(obj, 10, 0);
         }
         {
             lv_obj_t *obj = lv_label_create(parent_obj);
