@@ -14,7 +14,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PCcontroller")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< Updated upstream
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bf90de0bad8e36ea09af41686d1ff1eb7b6181a5")]
+>>>>>>> Stashed changes
 [assembly: System.Reflection.AssemblyProductAttribute("PCcontroller")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PCcontroller")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

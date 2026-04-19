@@ -38,7 +38,6 @@
             buttonBaglan = new Button();
             label1 = new Label();
             label2 = new Label();
-            label_USB_UART_status = new Label();
             labelses = new Label();
             labelekran = new Label();
             labelpil = new Label();
@@ -58,6 +57,9 @@
             labelStatusConnect = new Label();
             labelCPUcelcius = new Label();
             labelGPUcelcius = new Label();
+            checkBox1 = new CheckBox();
+            checkBox2 = new CheckBox();
+            buttonOBSbaglan = new Button();
             ((System.ComponentModel.ISupportInitialize)trackBarSes).BeginInit();
             ((System.ComponentModel.ISupportInitialize)trackBarEkran).BeginInit();
             SuspendLayout();
@@ -89,30 +91,33 @@
             // 
             // buttonKayit
             // 
-            buttonKayit.Location = new Point(12, 176);
+            buttonKayit.Location = new Point(12, 156);
             buttonKayit.Name = "buttonKayit";
             buttonKayit.Size = new Size(75, 23);
             buttonKayit.TabIndex = 2;
             buttonKayit.Text = "Kayıt";
             buttonKayit.UseVisualStyleBackColor = true;
+            buttonKayit.Click += buttonKayit_Click;
             // 
             // buttonDuraklat
             // 
-            buttonDuraklat.Location = new Point(93, 176);
+            buttonDuraklat.Location = new Point(93, 156);
             buttonDuraklat.Name = "buttonDuraklat";
             buttonDuraklat.Size = new Size(75, 23);
             buttonDuraklat.TabIndex = 2;
             buttonDuraklat.Text = "Duraklat";
             buttonDuraklat.UseVisualStyleBackColor = true;
+            buttonDuraklat.Click += buttonDuraklat_Click;
             // 
             // buttonDurdur
             // 
-            buttonDurdur.Location = new Point(174, 176);
+            buttonDurdur.Location = new Point(174, 156);
             buttonDurdur.Name = "buttonDurdur";
             buttonDurdur.Size = new Size(75, 23);
             buttonDurdur.TabIndex = 2;
             buttonDurdur.Text = "Durdur";
             buttonDurdur.UseVisualStyleBackColor = true;
+            buttonDurdur.Click += buttonDurdur_Click;
             // 
             // buttonBaglan
             // 
@@ -141,15 +146,6 @@
             label2.Size = new Size(79, 15);
             label2.TabIndex = 3;
             label2.Text = "Ekran seviyesi";
-            // 
-            // label_USB_UART_status
-            // 
-            label_USB_UART_status.AutoSize = true;
-            label_USB_UART_status.Location = new Point(242, 320);
-            label_USB_UART_status.Name = "label_USB_UART_status";
-            label_USB_UART_status.Size = new Size(97, 15);
-            label_USB_UART_status.TabIndex = 3;
-            label_USB_UART_status.Text = "USB-UART Status";
             // 
             // labelses
             // 
@@ -284,7 +280,7 @@
             // OBS_Durum
             // 
             OBS_Durum.AutoSize = true;
-            OBS_Durum.Location = new Point(276, 180);
+            OBS_Durum.Location = new Point(369, 160);
             OBS_Durum.Name = "OBS_Durum";
             OBS_Durum.Size = new Size(76, 15);
             OBS_Durum.TabIndex = 3;
@@ -293,7 +289,7 @@
             // labelStatusConnect
             // 
             labelStatusConnect.AutoSize = true;
-            labelStatusConnect.Location = new Point(345, 320);
+            labelStatusConnect.Location = new Point(242, 320);
             labelStatusConnect.Name = "labelStatusConnect";
             labelStatusConnect.Size = new Size(66, 15);
             labelStatusConnect.TabIndex = 3;
@@ -317,11 +313,43 @@
             labelGPUcelcius.TabIndex = 3;
             labelGPUcelcius.Text = "GPU --°C";
             // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.Location = new Point(12, 194);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(123, 19);
+            checkBox1.TabIndex = 5;
+            checkBox1.Text = "Başlangıçta çalıştır";
+            checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // checkBox2
+            // 
+            checkBox2.AutoSize = true;
+            checkBox2.Location = new Point(174, 194);
+            checkBox2.Name = "checkBox2";
+            checkBox2.Size = new Size(165, 19);
+            checkBox2.TabIndex = 5;
+            checkBox2.Text = "Pencere Durumuna Küçült";
+            checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // buttonOBSbaglan
+            // 
+            buttonOBSbaglan.Location = new Point(255, 156);
+            buttonOBSbaglan.Name = "buttonOBSbaglan";
+            buttonOBSbaglan.Size = new Size(108, 23);
+            buttonOBSbaglan.TabIndex = 2;
+            buttonOBSbaglan.Text = "OBS Port Bağlan";
+            buttonOBSbaglan.UseVisualStyleBackColor = true;
+            buttonOBSbaglan.Click += buttonOBSbaglan_Click;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(498, 361);
+            Controls.Add(checkBox2);
+            Controls.Add(checkBox1);
             Controls.Add(comboBoxCOMPORT);
             Controls.Add(label9);
             Controls.Add(labelGPUUsage);
@@ -338,11 +366,11 @@
             Controls.Add(label7);
             Controls.Add(label5);
             Controls.Add(labelStatusConnect);
-            Controls.Add(label_USB_UART_status);
             Controls.Add(labelses);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(buttonBaglan);
+            Controls.Add(buttonOBSbaglan);
             Controls.Add(buttonDurdur);
             Controls.Add(buttonDuraklat);
             Controls.Add(buttonKayit);
@@ -375,7 +403,6 @@
         private Button buttonBaglan;
         private Label label1;
         private Label label2;
-        private Label label_USB_UART_status;
         private Label labelses;
         private Label labelekran;
         private Label labelpil;
@@ -395,5 +422,8 @@
         private Label labelStatusConnect;
         private Label labelCPUcelcius;
         private Label labelGPUcelcius;
+        private CheckBox checkBox1;
+        private CheckBox checkBox2;
+        private Button buttonOBSbaglan;
     }
 }

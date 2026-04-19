@@ -1,28 +1,42 @@
 using LibreHardwareMonitor.Hardware;
 using NAudio.CoreAudioApi;
+using OBSWebsocketDotNet;
+using OBSWebsocketDotNet.Types;
+using OBSWebsocketDotNet.Types.Events;
 using System;
 using System.IO.Ports;
 using System.Management;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using OBSWebsocketDotNet;
 
 namespace PCcontroller
 {
     public partial class Main : Form
     {
+        // ── OBS ───────────────────────────────────────────────
+        private OBSWebsocket _obs = null!;
+
+        // OBS kayıt durumu: 0=idle, 1=recording, 2=paused, 3=stopped
+        // Bu değer SendPacket() içinde paketin son alanına yazılır
+        private int _obsState = 0;
+
+        // ── UART ──────────────────────────────────────────────
         private SerialPort? _port;
         private CancellationTokenSource _cts = new();
         private readonly object _lock = new();
+        private bool _uartConnected = false;
 
+        // ── Donanım ───────────────────────────────────────────
         private readonly Computer _pc;
         private readonly MMDeviceEnumerator _audioEnum;
         private AudioEndpointVolume? _audio;
 
+        // ── Timer'lar ─────────────────────────────────────────
         private readonly System.Windows.Forms.Timer _sendTimer = new();
         private readonly System.Windows.Forms.Timer _hwTimer = new();
 
+        // ── Paket verileri ────────────────────────────────────
         private int _volume;
         private int _brightness;
         private int _cpu;
@@ -31,14 +45,14 @@ namespace PCcontroller
         private int _gpuT;
         private int _battery;
 
-        private bool _uartConnected = false;
-        private string _obsState = "DISCONNECTED";
-
+        // ══════════════════════════════════════════════════════
+        //  CONSTRUCTOR
+        // ══════════════════════════════════════════════════════
         public Main()
         {
             InitializeComponent();
 
-            // ───── HARDWARE INIT ─────
+            // ── Donanım ──
             _pc = new Computer
             {
                 IsCpuEnabled = true,
@@ -52,12 +66,15 @@ namespace PCcontroller
             _audioEnum = new MMDeviceEnumerator();
             RefreshAudio();
 
+            // ── COM port ──
             LoadPorts();
-
             buttonBaglan.Enabled = comboBoxCOMPORT.Items.Count > 0;
             buttonBaglan.Click += (_, _) => ToggleConnection();
 
-            // ───── TIMERS ─────
+            // ── OBS ──
+            InitOBS();
+
+            // ── Timer'lar ──
             _sendTimer.Interval = 100;
             _sendTimer.Tick += (_, _) => SendPacket();
             _sendTimer.Start();
@@ -69,9 +86,180 @@ namespace PCcontroller
             UpdateUIStatus();
         }
 
-        // ======================================================
-        // COM PORT
-        // ======================================================
+        // ══════════════════════════════════════════════════════
+        //  OBS BAŞLATMA & EVENTLER
+        // ══════════════════════════════════════════════════════
+        private void InitOBS()
+        {
+            _obs = new OBSWebsocket();
+
+            _obs.Connected += OnOBSConnected;
+            _obs.Disconnected += OnOBSDisconnected;
+            _obs.RecordStateChanged += OnOBSRecordStateChanged;
+        }
+
+        private void OnOBSConnected(object? sender, EventArgs e)
+        {
+            Invoke(() =>
+            {
+                _obsState = 0;
+                OBS_Durum.Text = "OBS: BAĞLANDI";
+                UpdateOBSButtons(0);
+            });
+        }
+
+        private void OnOBSDisconnected(object? sender, OBSWebsocketDotNet.Communication.ObsDisconnectionInfo e)
+        {
+            if (IsDisposed || Disposing || !IsHandleCreated) return;
+
+            try
+            {
+                BeginInvoke(() =>
+                {
+                    _obsState = 0;
+                    OBS_Durum.Text = "OBS: BAĞLI DEĞİL";
+                    UpdateOBSButtons(0);
+                });
+            }
+            catch (ObjectDisposedException) { /* güvenli yakalama */ }
+        }
+
+        private void OnOBSRecordStateChanged(object? sender, RecordStateChangedEventArgs e)
+        {
+            Invoke(() =>
+            {
+                switch (e.OutputState.State)
+                {
+                    case OutputState.OBS_WEBSOCKET_OUTPUT_STARTED:
+                        _obsState = 1;
+                        OBS_Durum.Text = "OBS: KAYIT";
+                        break;
+
+                    case OutputState.OBS_WEBSOCKET_OUTPUT_PAUSED:
+                        _obsState = 2;
+                        OBS_Durum.Text = "OBS: DURAKLATILDI";
+                        break;
+
+                    case OutputState.OBS_WEBSOCKET_OUTPUT_RESUMED:
+                        _obsState = 1;
+                        OBS_Durum.Text = "OBS: KAYIT";
+                        break;
+
+                    case OutputState.OBS_WEBSOCKET_OUTPUT_STOPPED:
+                    case OutputState.OBS_WEBSOCKET_OUTPUT_STOPPING:
+                        _obsState = 3;
+                        OBS_Durum.Text = "OBS: DURDURULDU";
+                        break;
+
+                    default:
+                        _obsState = 0;
+                        OBS_Durum.Text = "OBS: HAZIR";
+                        break;
+                }
+
+                UpdateOBSButtons(_obsState);
+            });
+        }
+
+        // PC arayüzündeki OBS butonlarını OBS durumuna göre güncelle
+        // (Hem OBS event'inden hem de ESP32 komutundan sonra çağrılır)
+        private void UpdateOBSButtons(int state)
+        {
+            switch (state)
+            {
+                case 0: // idle / bağlı değil
+                case 3: // durduruldu
+                    buttonKayit.Enabled = true;
+                    buttonDuraklat.Enabled = false;
+                    buttonDurdur.Enabled = false;
+                    buttonDuraklat.Text = "Duraklat";
+                    break;
+
+                case 1: // kayıt
+                    buttonKayit.Enabled = false;
+                    buttonDuraklat.Enabled = true;
+                    buttonDurdur.Enabled = true;
+                    buttonDuraklat.Text = "Duraklat";
+                    break;
+
+                case 2: // duraklatıldı
+                    buttonKayit.Enabled = false;
+                    buttonDuraklat.Enabled = true;
+                    buttonDurdur.Enabled = true;
+                    buttonDuraklat.Text = "Devam Et";
+                    break;
+            }
+        }
+
+        // ══════════════════════════════════════════════════════
+        //  OBS BUTON HANDLERLARI (PC arayüzü)
+        // ══════════════════════════════════════════════════════
+        private async void buttonOBSbaglan_Click(object sender, EventArgs e)
+        {
+            if (_obs.IsConnected)
+            {
+                _obs.Disconnect();
+                return;
+            }
+
+            try
+            {
+                await Task.Run(() => _obs.ConnectAsync("ws://localhost:4455", "abc123"));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("OBS bağlantı hatası: " + ex.Message);
+            }
+        }
+
+        private async void buttonKayit_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                await Task.Run(() => _obs.StartRecord());
+                // _obsState, OBS event'i gelince otomatik güncellenecek
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Kayıt başlatılamadı: " + ex.Message);
+            }
+        }
+
+        private async void buttonDuraklat_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var status = await Task.Run(() => _obs.GetRecordStatus());
+
+                if (status.IsRecordingPaused)
+                    await Task.Run(() => _obs.ResumeRecord());
+                else
+                    await Task.Run(() => _obs.PauseRecord());
+
+                // _obsState, OBS event'i gelince otomatik güncellenecek
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Duraklatma hatası: " + ex.Message);
+            }
+        }
+
+        private async void buttonDurdur_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                await Task.Run(() => _obs.StopRecord());
+                // _obsState, OBS event'i gelince otomatik güncellenecek
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Kayıt durdurulamadı: " + ex.Message);
+            }
+        }
+
+        // ══════════════════════════════════════════════════════
+        //  COM PORT
+        // ══════════════════════════════════════════════════════
         private void LoadPorts()
         {
             comboBoxCOMPORT.Items.Clear();
@@ -94,7 +282,6 @@ namespace PCcontroller
             else
             {
                 if (comboBoxCOMPORT.SelectedItem == null) return;
-
                 Connect(comboBoxCOMPORT.SelectedItem.ToString()!);
                 buttonBaglan.Text = "Kes";
                 _uartConnected = true;
@@ -103,9 +290,9 @@ namespace PCcontroller
             UpdateUIStatus();
         }
 
-        // ======================================================
-        // SERIAL
-        // ======================================================
+        // ══════════════════════════════════════════════════════
+        //  SERİ PORT
+        // ══════════════════════════════════════════════════════
         private void Connect(string port)
         {
             try
@@ -135,9 +322,7 @@ namespace PCcontroller
 
                 if (_port != null)
                 {
-                    if (_port.IsOpen)
-                        _port.Close();
-
+                    if (_port.IsOpen) _port.Close();
                     _port.Dispose();
                 }
 
@@ -161,9 +346,16 @@ namespace PCcontroller
             }
         }
 
-        // ======================================================
-        // UART PROCESS
-        // ======================================================
+        // ══════════════════════════════════════════════════════
+        //  UART PARSE  –  ESP32'den gelen mesajlar
+        //
+        //  Format 1 (slider):  "1:075\n"  "2:060\n"
+        //  Format 2 (buton):   "X:T\n"
+        //      ch=3 → OBS START
+        //      ch=4 → OBS PAUSE/RESUME
+        //      ch=5 → OBS STOP
+        //  Format 3 (ACK):     "X:T\n"  (ch=1..2, slider ACK)
+        // ══════════════════════════════════════════════════════
         private void Process(string msg)
         {
             UartGelen.Text = msg;
@@ -171,14 +363,25 @@ namespace PCcontroller
 
             if (msg.Length < 3) return;
 
-            int ch = msg[0] - '0';
+            // Kanal numarası
+            if (!int.TryParse(msg[0].ToString(), out int ch)) return;
 
+            // ACK / Buton mesajı  (içinde 'T' var)
             if (msg.Contains("T"))
             {
                 labelStatusConnect.Text = $"ACK {ch}";
+
+                // ESP32 OBS butonları
+                switch (ch)
+                {
+                    case 3: HandleOBSCommandFromESP32(OBSCommand.Start); break;
+                    case 4: HandleOBSCommandFromESP32(OBSCommand.Pause); break;
+                    case 5: HandleOBSCommandFromESP32(OBSCommand.Stop); break;
+                }
                 return;
             }
 
+            // Slider değeri
             if (!int.TryParse(msg.Substring(2), out int val)) return;
 
             if (ch == 1)
@@ -192,37 +395,58 @@ namespace PCcontroller
             {
                 SetBrightness(val);
                 _brightness = val;
-
                 trackBarEkran.Value = val;
                 labelekran.Text = $"%{val}";
             }
         }
 
-        private void SetMasterVolumeSafe(float scalar)
+        // ══════════════════════════════════════════════════════
+        //  ESP32'DEN GELEN OBS KOMUTLARI
+        // ══════════════════════════════════════════════════════
+        private enum OBSCommand { Start, Pause, Stop }
+
+        private async void HandleOBSCommandFromESP32(OBSCommand cmd)
         {
-            if (_audio == null)
-                RefreshAudio();
+            if (!_obs.IsConnected)
+            {
+                OBS_Durum.Text = "OBS: BAĞLI DEĞİL";
+                return;
+            }
 
             try
             {
-                _audio!.MasterVolumeLevelScalar = scalar; // try once
-            }
-            catch (System.Runtime.InteropServices.InvalidComObjectException)
-            {
-                // stale COM proxy — yeniden al ve tekrar dene
-                RefreshAudio();
-                try
+                switch (cmd)
                 {
-                    _audio?.MasterVolumeLevelScalar = scalar;
+                    case OBSCommand.Start:
+                        await Task.Run(() => _obs.StartRecord());
+                        break;
+
+                    case OBSCommand.Pause:
+                        var status = await Task.Run(() => _obs.GetRecordStatus());
+                        if (status.IsRecordingPaused)
+                            await Task.Run(() => _obs.ResumeRecord());
+                        else
+                            await Task.Run(() => _obs.PauseRecord());
+                        break;
+
+                    case OBSCommand.Stop:
+                        await Task.Run(() => _obs.StopRecord());
+                        break;
                 }
-                catch { /* opsiyonel: logla */ }
+                // _obsState ve UI, OBS event'i (OnOBSRecordStateChanged) gelince otomatik güncellenir
+                // Bu sayede hem PC hem ESP32 arayüzü senkronize kalır
             }
-            catch { /* opsiyonel: logla */ }
+            catch (Exception ex)
+            {
+                OBS_Durum.Text = $"OBS HATA: {ex.Message}";
+            }
         }
 
-        // ======================================================
-        // SEND PACKET
-        // ======================================================
+        // ══════════════════════════════════════════════════════
+        //  PAKET GÖNDERME  –  PC → ESP32
+        //  Format: "VOL:BRI:CPU:GPU:CTP:GTP:PIL:K\n"
+        //  K = _obsState  (0=idle, 1=kayıt, 2=duraklatma, 3=durduruldu)
+        // ══════════════════════════════════════════════════════
         private void SendPacket()
         {
             if (_port?.IsOpen != true)
@@ -235,7 +459,8 @@ namespace PCcontroller
             _uartConnected = true;
 
             string pkt =
-                $"{_volume:D3}:{_brightness:D3}:{_cpu:D3}:{_gpu:D3}:{_cpuT:D3}:{_gpuT:D3}:{_battery:D3}:0\n";
+                $"{_volume:D3}:{_brightness:D3}:{_cpu:D3}:{_gpu:D3}:" +
+                $"{_cpuT:D3}:{_gpuT:D3}:{_battery:D3}:{_obsState}\n";
 
             Send(pkt);
         }
@@ -253,9 +478,9 @@ namespace PCcontroller
             }
         }
 
-        // ======================================================
-        // HARDWARE
-        // ======================================================
+        // ══════════════════════════════════════════════════════
+        //  DONANIM
+        // ══════════════════════════════════════════════════════
         private void UpdateHardware()
         {
             Task.Run(() =>
@@ -313,17 +538,15 @@ namespace PCcontroller
                     labelCPUUsage.Text = $"%{cpuL}";
                     labelGPUUsage.Text = $"%{gpuL}";
                     labelpil.Text = $"%{bat}";
-
-                    // TEMP LABELS
                     labelCPUcelcius.Text = $"CPU {cpuT}°C";
                     labelGPUcelcius.Text = $"GPU {gpuT}°C";
                 });
             });
         }
 
-        // ======================================================
-        // AUDIO
-        // ======================================================
+        // ══════════════════════════════════════════════════════
+        //  SES
+        // ══════════════════════════════════════════════════════
         private void RefreshAudio()
         {
             try
@@ -337,9 +560,25 @@ namespace PCcontroller
             catch { }
         }
 
-        // ======================================================
-        // BRIGHTNESS
-        // ======================================================
+        private void SetMasterVolumeSafe(float scalar)
+        {
+            if (_audio == null) RefreshAudio();
+
+            try
+            {
+                _audio!.MasterVolumeLevelScalar = scalar;
+            }
+            catch (System.Runtime.InteropServices.InvalidComObjectException)
+            {
+                RefreshAudio();
+                try { _audio?.MasterVolumeLevelScalar = scalar; } catch { }
+            }
+            catch { }
+        }
+
+        // ══════════════════════════════════════════════════════
+        //  PARLAKLLIK
+        // ══════════════════════════════════════════════════════
         private static void SetBrightness(int val)
         {
             try
@@ -356,13 +595,13 @@ namespace PCcontroller
             catch { }
         }
 
-        // ======================================================
-        // UI STATUS
-        // ======================================================
+        // ══════════════════════════════════════════════════════
+        //  UI DURUM
+        // ══════════════════════════════════════════════════════
         private void UpdateUIStatus()
         {
             labelStatusConnect.Text = _uartConnected ? "UART: CONNECTED" : "UART: DISCONNECTED";
-            OBS_Durum.Text = _obsState;
+            OBS_Durum.Text = _obs?.IsConnected == true ? "OBS: BAĞLANDI" : "OBS: BAĞLI DEĞİL";
         }
 
         private void trackBarSes_Scroll(object sender, EventArgs e)
@@ -376,11 +615,34 @@ namespace PCcontroller
         private void trackBarEkran_Scroll(object sender, EventArgs e)
         {
             int val = trackBarEkran.Value;
-
             labelekran.Text = $"%{val}";
             _brightness = val;
-
             SetBrightness(val);
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            _sendTimer.Stop();
+            _hwTimer.Stop();
+            Disconnect();
+
+            if (_obs != null)
+            {
+                _obs.Connected -= OnOBSConnected;
+                _obs.Disconnected -= OnOBSDisconnected;
+                _obs.RecordStateChanged -= OnOBSRecordStateChanged;
+
+                if (_obs.IsConnected) _obs.Disconnect();
+                _obs = null;
+            }
+
+            _pc.Close();
+            base.OnFormClosing(e);
+        }
+        private void SafeBeginInvoke(Action a)
+        {
+            if (IsDisposed || Disposing || !IsHandleCreated) return;
+            try { BeginInvoke(a); } catch { }
         }
     }
 }
