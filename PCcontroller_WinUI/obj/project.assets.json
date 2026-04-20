@@ -2746,11 +2746,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\hfk47\\source\\repos\\PCcontroller\\PCcontroller.csproj",
+      "projectUniqueName": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\PCcontroller.csproj",
       "projectName": "PCcontroller",
-      "projectPath": "C:\\Users\\hfk47\\source\\repos\\PCcontroller\\PCcontroller.csproj",
+      "projectPath": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\PCcontroller.csproj",
       "packagesPath": "C:\\Users\\hfk47\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\hfk47\\source\\repos\\PCcontroller\\obj\\",
+      "outputPath": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

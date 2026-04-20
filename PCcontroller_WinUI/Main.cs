@@ -1,4 +1,5 @@
 using LibreHardwareMonitor.Hardware;
+using Microsoft.Win32;
 using NAudio.CoreAudioApi;
 using OBSWebsocketDotNet;
 using OBSWebsocketDotNet.Types;
@@ -16,9 +17,6 @@ namespace PCcontroller
     {
         // ── OBS ───────────────────────────────────────────────
         private OBSWebsocket _obs = null!;
-
-        // OBS kayıt durumu: 0=idle, 1=recording, 2=paused, 3=stopped
-        // Bu değer SendPacket() içinde paketin son alanına yazılır
         private int _obsState = 0;
 
         // ── UART ──────────────────────────────────────────────
@@ -45,6 +43,17 @@ namespace PCcontroller
         private int _gpuT;
         private int _battery;
 
+        // ── Ses/Parlaklık takip ───────────────────────────────
+        private bool _sliderDraggingVolume = false;
+        private bool _sliderDraggingBrightness = false;
+        private ManagementEventWatcher? _brightnessWatcher;
+
+        // ── System Tray ───────────────────────────────────────
+        private NotifyIcon _trayIcon = null!;
+        private bool _forceClose = false; // Tray "Kapat"tan geliyorsa true
+
+        private bool _loading = true;
+
         // ══════════════════════════════════════════════════════
         //  CONSTRUCTOR
         // ══════════════════════════════════════════════════════
@@ -52,6 +61,8 @@ namespace PCcontroller
         {
             InitializeComponent();
 
+            checkBox1.Checked = IsStartupEnabled();
+            _loading = false;
             // ── Donanım ──
             _pc = new Computer
             {
@@ -66,6 +77,19 @@ namespace PCcontroller
             _audioEnum = new MMDeviceEnumerator();
             RefreshAudio();
 
+            // ── Başlangıç değerlerini UI'a yaz ──
+            InitialSyncUI();
+
+            // ── Canlı takip başlat ──
+            StartVolumeTracking();
+            StartBrightnessTracking();
+
+            // ── TrackBar sürükleme koruması ──
+            trackBarSes.MouseDown += (_, _) => _sliderDraggingVolume = true;
+            trackBarSes.MouseUp += (_, _) => _sliderDraggingVolume = false;
+            trackBarEkran.MouseDown += (_, _) => _sliderDraggingBrightness = true;
+            trackBarEkran.MouseUp += (_, _) => _sliderDraggingBrightness = false;
+
             // ── COM port ──
             LoadPorts();
             buttonBaglan.Enabled = comboBoxCOMPORT.Items.Count > 0;
@@ -73,6 +97,9 @@ namespace PCcontroller
 
             // ── OBS ──
             InitOBS();
+
+            // ── System Tray ──
+            InitTray();
 
             // ── Timer'lar ──
             _sendTimer.Interval = 100;
@@ -84,6 +111,165 @@ namespace PCcontroller
             _hwTimer.Start();
 
             UpdateUIStatus();
+
+            buttonOBSbaglan_Click(null!, null!);
+        }
+
+        // ══════════════════════════════════════════════════════
+        //  SYSTEM TRAY
+        // ══════════════════════════════════════════════════════
+        private void InitTray()
+        {
+            var menu = new ContextMenuStrip();
+            var menuAc = new ToolStripMenuItem("Aç");
+            var menuKapat = new ToolStripMenuItem("Kapat");
+
+            menuAc.Click += (_, _) => TrayAc();
+            menuKapat.Click += (_, _) =>
+            {
+                _forceClose = true;
+                Application.Exit();
+            };
+
+            menu.Items.Add(menuAc);
+            menu.Items.Add(new ToolStripSeparator());
+            menu.Items.Add(menuKapat);
+
+            _trayIcon = new NotifyIcon
+            {
+                Icon = this.Icon, // kendi ikonun varsa: new Icon("icon.ico")
+                Text = "PC Controller",
+                Visible = true,
+                ContextMenuStrip = menu
+            };
+
+            _trayIcon.DoubleClick += (_, _) => TrayAc();
+        }
+
+        private void TrayAc()
+        {
+            Show();
+            WindowState = FormWindowState.Normal;
+            ShowInTaskbar = true;
+            Activate();
+        }
+
+        // Küçültünce tray'e göm
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+
+            if (WindowState == FormWindowState.Minimized)
+            {
+                Hide();
+                ShowInTaskbar = true;
+                /*
+                _trayIcon.ShowBalloonTip(
+                    1500,
+                    "PC Controller",
+                    "Arka planda çalışıyor. Geri açmak için çift tıkla.",
+                    ToolTipIcon.Info
+                );
+                */
+            }
+        }
+
+        // ══════════════════════════════════════════════════════
+        //  BAŞLANGIÇ SENKRONIZASYONU
+        // ══════════════════════════════════════════════════════
+        private void InitialSyncUI()
+        {
+            // ── Ses ──
+            try
+            {
+                if (_audio != null)
+                {
+                    _volume = (int)(_audio.MasterVolumeLevelScalar * 100);
+                    trackBarSes.Value = Math.Clamp(_volume, trackBarSes.Minimum, trackBarSes.Maximum);
+                    labelses.Text = $"%{_volume}";
+                }
+            }
+            catch { }
+
+            // ── Parlaklık ──
+            try
+            {
+                using var s = new ManagementObjectSearcher(
+                    @"\\.\root\WMI",
+                    "SELECT CurrentBrightness FROM WmiMonitorBrightness");
+
+                foreach (ManagementObject o in s.Get())
+                {
+                    _brightness = Convert.ToInt32(o["CurrentBrightness"]);
+                    trackBarEkran.Value = Math.Clamp(_brightness, trackBarEkran.Minimum, trackBarEkran.Maximum);
+                    labelekran.Text = $"%{_brightness}";
+                    break;
+                }
+            }
+            catch { }
+        }
+
+        // ══════════════════════════════════════════════════════
+        //  SES TAKİBİ  –  NAudio OnVolumeNotification
+        // ══════════════════════════════════════════════════════
+        private void StartVolumeTracking()
+        {
+            if (_audio == null) return;
+            try { _audio.OnVolumeNotification += OnVolumeChanged; }
+            catch { }
+        }
+
+        private void OnVolumeChanged(AudioVolumeNotificationData data)
+        {
+            if (IsDisposed || !IsHandleCreated) return;
+
+            BeginInvoke(() =>
+            {
+                int yuzde = (int)(data.MasterVolume * 100);
+                _volume = yuzde;
+
+                if (!_sliderDraggingVolume)
+                {
+                    trackBarSes.Value = Math.Clamp(yuzde, trackBarSes.Minimum, trackBarSes.Maximum);
+                    labelses.Text = $"%{yuzde}";
+                }
+            });
+        }
+
+        // ══════════════════════════════════════════════════════
+        //  PARLAKLIK TAKİBİ  –  WMI Event Watcher
+        // ══════════════════════════════════════════════════════
+        private void StartBrightnessTracking()
+        {
+            try
+            {
+                _brightnessWatcher = new ManagementEventWatcher(
+                    new ManagementScope(@"\\.\root\WMI"),
+                    new WqlEventQuery("SELECT * FROM WmiMonitorBrightnessEvent")
+                );
+
+                _brightnessWatcher.EventArrived += OnBrightnessChanged;
+                _brightnessWatcher.Start();
+            }
+            catch { }
+        }
+
+        private void OnBrightnessChanged(object sender, EventArrivedEventArgs e)
+        {
+            if (IsDisposed || !IsHandleCreated) return;
+
+            int yeniParlaklik = Convert.ToInt32(e.NewEvent["Brightness"]);
+
+            BeginInvoke(() =>
+            {
+                _brightness = yeniParlaklik;
+
+                if (!_sliderDraggingBrightness)
+                {
+                    trackBarEkran.Value = Math.Clamp(yeniParlaklik, trackBarEkran.Minimum, trackBarEkran.Maximum);
+                    labelekran.Text = $"%{yeniParlaklik}";
+                }
+            });
         }
 
         // ══════════════════════════════════════════════════════
@@ -121,7 +307,7 @@ namespace PCcontroller
                     UpdateOBSButtons(0);
                 });
             }
-            catch (ObjectDisposedException) { /* güvenli yakalama */ }
+            catch (ObjectDisposedException) { }
         }
 
         private void OnOBSRecordStateChanged(object? sender, RecordStateChangedEventArgs e)
@@ -161,28 +347,26 @@ namespace PCcontroller
             });
         }
 
-        // PC arayüzündeki OBS butonlarını OBS durumuna göre güncelle
-        // (Hem OBS event'inden hem de ESP32 komutundan sonra çağrılır)
         private void UpdateOBSButtons(int state)
         {
             switch (state)
             {
-                case 0: // idle / bağlı değil
-                case 3: // durduruldu
+                case 0:
+                case 3:
                     buttonKayit.Enabled = true;
                     buttonDuraklat.Enabled = false;
                     buttonDurdur.Enabled = false;
                     buttonDuraklat.Text = "Duraklat";
                     break;
 
-                case 1: // kayıt
+                case 1:
                     buttonKayit.Enabled = false;
                     buttonDuraklat.Enabled = true;
                     buttonDurdur.Enabled = true;
                     buttonDuraklat.Text = "Duraklat";
                     break;
 
-                case 2: // duraklatıldı
+                case 2:
                     buttonKayit.Enabled = false;
                     buttonDuraklat.Enabled = true;
                     buttonDurdur.Enabled = true;
@@ -192,7 +376,7 @@ namespace PCcontroller
         }
 
         // ══════════════════════════════════════════════════════
-        //  OBS BUTON HANDLERLARI (PC arayüzü)
+        //  OBS BUTON HANDLERLARI
         // ══════════════════════════════════════════════════════
         private async void buttonOBSbaglan_Click(object sender, EventArgs e)
         {
@@ -214,15 +398,8 @@ namespace PCcontroller
 
         private async void buttonKayit_Click(object sender, EventArgs e)
         {
-            try
-            {
-                await Task.Run(() => _obs.StartRecord());
-                // _obsState, OBS event'i gelince otomatik güncellenecek
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Kayıt başlatılamadı: " + ex.Message);
-            }
+            try { await Task.Run(() => _obs.StartRecord()); }
+            catch (Exception ex) { MessageBox.Show("Kayıt başlatılamadı: " + ex.Message); }
         }
 
         private async void buttonDuraklat_Click(object sender, EventArgs e)
@@ -235,26 +412,14 @@ namespace PCcontroller
                     await Task.Run(() => _obs.ResumeRecord());
                 else
                     await Task.Run(() => _obs.PauseRecord());
-
-                // _obsState, OBS event'i gelince otomatik güncellenecek
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Duraklatma hatası: " + ex.Message);
-            }
+            catch (Exception ex) { MessageBox.Show("Duraklatma hatası: " + ex.Message); }
         }
 
         private async void buttonDurdur_Click(object sender, EventArgs e)
         {
-            try
-            {
-                await Task.Run(() => _obs.StopRecord());
-                // _obsState, OBS event'i gelince otomatik güncellenecek
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Kayıt durdurulamadı: " + ex.Message);
-            }
+            try { await Task.Run(() => _obs.StopRecord()); }
+            catch (Exception ex) { MessageBox.Show("Kayıt durdurulamadı: " + ex.Message); }
         }
 
         // ══════════════════════════════════════════════════════
@@ -308,10 +473,7 @@ namespace PCcontroller
                 _cts = new CancellationTokenSource();
                 Task.Run(() => ReadLoop(_cts.Token));
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         private void Disconnect()
@@ -348,13 +510,6 @@ namespace PCcontroller
 
         // ══════════════════════════════════════════════════════
         //  UART PARSE  –  ESP32'den gelen mesajlar
-        //
-        //  Format 1 (slider):  "1:075\n"  "2:060\n"
-        //  Format 2 (buton):   "X:T\n"
-        //      ch=3 → OBS START
-        //      ch=4 → OBS PAUSE/RESUME
-        //      ch=5 → OBS STOP
-        //  Format 3 (ACK):     "X:T\n"  (ch=1..2, slider ACK)
         // ══════════════════════════════════════════════════════
         private void Process(string msg)
         {
@@ -363,15 +518,12 @@ namespace PCcontroller
 
             if (msg.Length < 3) return;
 
-            // Kanal numarası
             if (!int.TryParse(msg[0].ToString(), out int ch)) return;
 
-            // ACK / Buton mesajı  (içinde 'T' var)
             if (msg.Contains("T"))
             {
                 labelStatusConnect.Text = $"ACK {ch}";
 
-                // ESP32 OBS butonları
                 switch (ch)
                 {
                     case 3: HandleOBSCommandFromESP32(OBSCommand.Start); break;
@@ -381,22 +533,25 @@ namespace PCcontroller
                 return;
             }
 
-            // Slider değeri
             if (!int.TryParse(msg.Substring(2), out int val)) return;
 
             if (ch == 1)
             {
                 SetMasterVolumeSafe(val / 100f);
                 _volume = val;
-                trackBarSes.Value = val;
+                _sliderDraggingVolume = true;
+                trackBarSes.Value = Math.Clamp(val, trackBarSes.Minimum, trackBarSes.Maximum);
                 labelses.Text = $"%{val}";
+                _sliderDraggingVolume = false;
             }
             else if (ch == 2)
             {
                 SetBrightness(val);
                 _brightness = val;
-                trackBarEkran.Value = val;
+                _sliderDraggingBrightness = true;
+                trackBarEkran.Value = Math.Clamp(val, trackBarEkran.Minimum, trackBarEkran.Maximum);
                 labelekran.Text = $"%{val}";
+                _sliderDraggingBrightness = false;
             }
         }
 
@@ -433,19 +588,12 @@ namespace PCcontroller
                         await Task.Run(() => _obs.StopRecord());
                         break;
                 }
-                // _obsState ve UI, OBS event'i (OnOBSRecordStateChanged) gelince otomatik güncellenir
-                // Bu sayede hem PC hem ESP32 arayüzü senkronize kalır
             }
-            catch (Exception ex)
-            {
-                OBS_Durum.Text = $"OBS HATA: {ex.Message}";
-            }
+            catch (Exception ex) { OBS_Durum.Text = $"OBS HATA: {ex.Message}"; }
         }
 
         // ══════════════════════════════════════════════════════
         //  PAKET GÖNDERME  –  PC → ESP32
-        //  Format: "VOL:BRI:CPU:GPU:CTP:GTP:PIL:K\n"
-        //  K = _obsState  (0=idle, 1=kayıt, 2=duraklatma, 3=durduruldu)
         // ══════════════════════════════════════════════════════
         private void SendPacket()
         {
@@ -551,6 +699,9 @@ namespace PCcontroller
         {
             try
             {
+                if (_audio != null)
+                    _audio.OnVolumeNotification -= OnVolumeChanged;
+
                 _audio = _audioEnum
                     .GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia)
                     .AudioEndpointVolume;
@@ -577,7 +728,7 @@ namespace PCcontroller
         }
 
         // ══════════════════════════════════════════════════════
-        //  PARLAKLLIK
+        //  PARLAKLIK
         // ══════════════════════════════════════════════════════
         private static void SetBrightness(int val)
         {
@@ -620,10 +771,33 @@ namespace PCcontroller
             SetBrightness(val);
         }
 
+        // ══════════════════════════════════════════════════════
+        //  FORM KAPANIRKEN TEMİZLİK
+        // ══════════════════════════════════════════════════════
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            // X butonuna basılınca kapat değil, tray'e küçült
+            /*
+            if (!_forceClose && e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true;
+                WindowState = FormWindowState.Minimized;
+                return;
+            }
+            */
+            // Gerçek kapatma (tray menüsü "Kapat" butonu)
             _sendTimer.Stop();
             _hwTimer.Stop();
+
+            if (_audio != null)
+                _audio.OnVolumeNotification -= OnVolumeChanged;
+
+            _brightnessWatcher?.Stop();
+            _brightnessWatcher?.Dispose();
+
+            _trayIcon.Visible = false;
+            _trayIcon.Dispose();
+
             Disconnect();
 
             if (_obs != null)
@@ -633,16 +807,58 @@ namespace PCcontroller
                 _obs.RecordStateChanged -= OnOBSRecordStateChanged;
 
                 if (_obs.IsConnected) _obs.Disconnect();
-                _obs = null;
+                _obs = null!;
             }
 
             _pc.Close();
             base.OnFormClosing(e);
         }
-        private void SafeBeginInvoke(Action a)
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            if (IsDisposed || Disposing || !IsHandleCreated) return;
-            try { BeginInvoke(a); } catch { }
+            if (_loading) return;
+
+            SetStartup(checkBox1.Checked);
         }
+
+        private const string APP_NAME = "PCController";
+
+        private void SetStartup(bool enable)
+        {
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(
+                @"Software\Microsoft\Windows\CurrentVersion\Run", true))
+            {
+                if (enable)
+                {
+                    key.SetValue(APP_NAME, Application.ExecutablePath);
+                }
+                else
+                {
+                    key.DeleteValue(APP_NAME, false);
+                }
+            }
+        }
+
+        private bool IsStartupEnabled()
+        {
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(
+                @"Software\Microsoft\Windows\CurrentVersion\Run", false))
+            {
+                return key.GetValue(APP_NAME) != null;
+            }
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            if (IsStartupEnabled())
+            {
+                WindowState = FormWindowState.Minimized;
+                Hide();
+                ShowInTaskbar = false;
+            }
+        }
+
     }
 }

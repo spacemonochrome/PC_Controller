@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "hktfZj00lXQ=",
+  "dgSpecHash": "jLzSJKj33l4=",
   "success": true,
-  "projectFilePath": "C:\\Users\\hfk47\\source\\repos\\PCcontroller\\PCcontroller.csproj",
+  "projectFilePath": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\PCcontroller.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\hfk47\\.nuget\\packages\\blacksharp.core\\1.0.7\\blacksharp.core.1.0.7.nupkg.sha512",
     "C:\\Users\\hfk47\\.nuget\\packages\\diskinfotoolkit\\1.1.2\\diskinfotoolkit.1.1.2.nupkg.sha512",

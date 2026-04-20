@@ -1,38 +1,22 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\hfk47\\source\\repos\\PCcontroller\\",
+  "WorkspaceRootPath": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|c:\\users\\hfk47\\source\\repos\\pccontroller\\main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|c:\\users\\hfk47\\documents\\github\\pc_controller\\pccontroller_winui\\main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|solutionrelative:main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-<<<<<<< Updated upstream
-      "AbsoluteMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|C:\\Users\\hfk47\\source\\repos\\PCcontroller\\main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-=======
-      "AbsoluteMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|c:\\users\\hfk47\\documents\\github\\pc_controller\\pccontroller_winui\\pccontroller.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|solutionrelative:pccontroller.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|solutionrelative:main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|c:\\users\\hfk47\\documents\\github\\pc_controller\\pccontroller_winui\\main.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|solutionrelative:main.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
->>>>>>> Stashed changes
-      "RelativeMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|solutionrelative:main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
-<<<<<<< Updated upstream
-      "AbsoluteMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|c:\\users\\hfk47\\source\\repos\\pccontroller\\main.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|solutionrelative:main.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-=======
-      "AbsoluteMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|c:\\users\\hfk47\\documents\\github\\pc_controller\\pccontroller_winui\\pccontroller.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
-      "RelativeMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|solutionrelative:pccontroller.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
->>>>>>> Stashed changes
+      "AbsoluteMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|c:\\users\\hfk47\\documents\\github\\pc_controller\\pccontroller_winui\\pccontroller.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|solutionrelative:pccontroller.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     }
   ],
   "DocumentGroupContainers": [
@@ -42,99 +26,58 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
               "Title": "PCcontroller",
               "DocumentMoniker": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\PCcontroller.csproj",
               "RelativeDocumentMoniker": "PCcontroller.csproj",
               "ToolTip": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\PCcontroller.csproj",
               "RelativeToolTip": "PCcontroller.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-04-18T22:24:26.914Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "PCcontroller.csproj",
-              "DocumentMoniker": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\PCcontroller.csproj",
-              "RelativeDocumentMoniker": "PCcontroller.csproj",
-              "ToolTip": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\PCcontroller.csproj",
-              "RelativeToolTip": "PCcontroller.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-04-18T22:24:19.829Z",
+              "WhenOpened": "2026-04-20T20:55:29.465Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Main.cs",
-              "DocumentMoniker": "C:\\Users\\hfk47\\source\\repos\\PCcontroller\\Main.cs",
+              "DocumentMoniker": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\Main.cs",
               "RelativeDocumentMoniker": "Main.cs",
-              "ToolTip": "C:\\Users\\hfk47\\source\\repos\\PCcontroller\\Main.cs",
+              "ToolTip": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\Main.cs",
               "RelativeToolTip": "Main.cs",
-<<<<<<< Updated upstream
-              "ViewState": "AgIAADcBAAAAAAAAAAAiwEkBAAANAAAAAAAAAA==",
-=======
-              "ViewState": "AgIAAD4CAAAAAAAAAAAMwEwCAAAAAAAAAAAAAA==",
->>>>>>> Stashed changes
+              "ViewState": "AgIAAEQDAAAAAAAAAAAqwEoDAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-17T21:16:44.118Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Microsoft.Common.CurrentVersion.targets",
-              "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
-              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
-              "ToolTip": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
-              "RelativeToolTip": "..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
-              "ViewState": "AgIAAGsbAAAAAAAAAAAiwHMbAAB2AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
-              "WhenOpened": "2026-04-17T23:15:26.867Z",
+              "WhenOpened": "2026-04-20T20:33:45.018Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
               "Title": "Main.Designer.cs",
-              "DocumentMoniker": "C:\\Users\\hfk47\\source\\repos\\PCcontroller\\Main.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\Main.Designer.cs",
               "RelativeDocumentMoniker": "Main.Designer.cs",
-              "ToolTip": "C:\\Users\\hfk47\\source\\repos\\PCcontroller\\Main.Designer.cs",
+              "ToolTip": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\Main.Designer.cs",
               "RelativeToolTip": "Main.Designer.cs",
-              "ViewState": "AgIAAEQBAAAAAAAAAAAqwFQBAAApAAAAAAAAAA==",
+              "ViewState": "AgIAAGUBAAAAAAAAAAAQwHMBAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-17T20:29:14.616Z",
+              "WhenOpened": "2026-04-20T20:33:45.052Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-<<<<<<< Updated upstream
               "DocumentIndex": 1,
               "Title": "Main.cs [Tasar\u0131m]",
-              "DocumentMoniker": "C:\\Users\\hfk47\\source\\repos\\PCcontroller\\Main.cs",
-              "RelativeDocumentMoniker": "Main.cs",
-              "ToolTip": "C:\\Users\\hfk47\\source\\repos\\PCcontroller\\Main.cs [Tasar\u0131m]",
-              "RelativeToolTip": "Main.cs [Tasar\u0131m]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-17T10:40:24.477Z",
-              "EditorCaption": " [Tasar\u0131m]"
-=======
-              "DocumentIndex": 3,
-              "Title": "Main.cs [Design]",
               "DocumentMoniker": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\Main.cs",
               "RelativeDocumentMoniker": "Main.cs",
-              "ToolTip": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\Main.cs [Design]",
-              "RelativeToolTip": "Main.cs [Design]",
+              "ToolTip": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\Main.cs [Tasar\u0131m]",
+              "RelativeToolTip": "Main.cs [Tasar\u0131m]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-17T10:40:24.477Z",
-              "EditorCaption": " [Design]"
->>>>>>> Stashed changes
+              "WhenOpened": "2026-04-20T20:33:45.053Z",
+              "EditorCaption": " [Tasar\u0131m]"
             }
           ]
         }
