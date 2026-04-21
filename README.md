@@ -64,7 +64,7 @@ The ESP32 and PC communicate over **115200 baud UART** using a custom 29-byte pa
 ### PC → ESP32 (Main Status Packet)
 ```text
 SES:PAR:CPU:GPU:CTP:GTP:PIL:K\n
-
+```
 
 
 
