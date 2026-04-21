@@ -24,7 +24,6 @@
           },
           {
             "type": "border",
-            "selected": 0,
             "size": 168.5,
             "location": "right",
             "children": [
@@ -1070,10 +1069,11 @@
           "0": {},
           "2": {},
           "5": {},
-          "13": {},
-          "17": {
+          "8": {
             "$selected": true
           },
+          "13": {},
+          "17": {},
           "18": {},
           "19": {}
         }
@@ -1128,7 +1128,8 @@
   "lvglPart": "MAIN",
   "lvglState": "DEFAULT",
   "lvglExpandedPropertiesGroup": [
-    "MARGIN"
+    "MARGIN",
+    "BACKGROUND"
   ],
   "showInactiveFlowsInDebugger": true,
   "globalFlowZoom": true,

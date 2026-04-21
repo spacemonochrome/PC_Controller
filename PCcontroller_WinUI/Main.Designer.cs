@@ -59,14 +59,14 @@
             labelGPUcelcius = new Label();
             checkBox1 = new CheckBox();
             buttonOBSbaglan = new Button();
-            textBox1 = new TextBox();
             ((System.ComponentModel.ISupportInitialize)trackBarSes).BeginInit();
             ((System.ComponentModel.ISupportInitialize)trackBarEkran).BeginInit();
             SuspendLayout();
             // 
             // progressBarPil
             // 
-            progressBarPil.Location = new Point(12, 126);
+            progressBarPil.Location = new Point(12, 102);
+            progressBarPil.MarqueeAnimationSpeed = 0;
             progressBarPil.Name = "progressBarPil";
             progressBarPil.Size = new Size(340, 15);
             progressBarPil.TabIndex = 0;
@@ -82,7 +82,7 @@
             // 
             // trackBarEkran
             // 
-            trackBarEkran.Location = new Point(12, 63);
+            trackBarEkran.Location = new Point(12, 54);
             trackBarEkran.Maximum = 100;
             trackBarEkran.Name = "trackBarEkran";
             trackBarEkran.Size = new Size(340, 45);
@@ -91,7 +91,7 @@
             // 
             // buttonKayit
             // 
-            buttonKayit.Location = new Point(12, 156);
+            buttonKayit.Location = new Point(12, 132);
             buttonKayit.Name = "buttonKayit";
             buttonKayit.Size = new Size(75, 23);
             buttonKayit.TabIndex = 2;
@@ -101,7 +101,7 @@
             // 
             // buttonDuraklat
             // 
-            buttonDuraklat.Location = new Point(93, 156);
+            buttonDuraklat.Location = new Point(93, 132);
             buttonDuraklat.Name = "buttonDuraklat";
             buttonDuraklat.Size = new Size(75, 23);
             buttonDuraklat.TabIndex = 2;
@@ -111,7 +111,7 @@
             // 
             // buttonDurdur
             // 
-            buttonDurdur.Location = new Point(174, 156);
+            buttonDurdur.Location = new Point(174, 132);
             buttonDurdur.Name = "buttonDurdur";
             buttonDurdur.Size = new Size(75, 23);
             buttonDurdur.TabIndex = 2;
@@ -122,12 +122,13 @@
             // buttonBaglan
             // 
             buttonBaglan.Enabled = false;
-            buttonBaglan.Location = new Point(139, 282);
+            buttonBaglan.Location = new Point(80, 160);
             buttonBaglan.Name = "buttonBaglan";
-            buttonBaglan.Size = new Size(97, 23);
+            buttonBaglan.Size = new Size(58, 23);
             buttonBaglan.TabIndex = 2;
             buttonBaglan.Text = "Baglan";
             buttonBaglan.UseVisualStyleBackColor = true;
+            buttonBaglan.Click += buttonBaglan_Click;
             // 
             // label1
             // 
@@ -141,7 +142,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(407, 72);
+            label2.Location = new Point(407, 63);
             label2.Name = "label2";
             label2.Size = new Size(79, 15);
             label2.TabIndex = 3;
@@ -159,7 +160,7 @@
             // labelekran
             // 
             labelekran.AutoSize = true;
-            labelekran.Location = new Point(358, 72);
+            labelekran.Location = new Point(358, 63);
             labelekran.Name = "labelekran";
             labelekran.Size = new Size(29, 15);
             labelekran.TabIndex = 3;
@@ -168,7 +169,7 @@
             // labelpil
             // 
             labelpil.AutoSize = true;
-            labelpil.Location = new Point(358, 126);
+            labelpil.Location = new Point(358, 102);
             labelpil.Name = "labelpil";
             labelpil.Size = new Size(29, 15);
             labelpil.TabIndex = 3;
@@ -177,34 +178,37 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(125, 192);
+            label7.Location = new Point(144, 168);
             label7.Name = "label7";
-            label7.Size = new Size(43, 15);
+            label7.Size = new Size(53, 15);
             label7.TabIndex = 3;
-            label7.Text = "Uart Tx";
+            label7.Text = "UART TX";
+            label7.Visible = false;
             // 
             // UartGelen
             // 
             UartGelen.AutoSize = true;
-            UartGelen.Location = new Point(61, 192);
+            UartGelen.Location = new Point(61, 168);
             UartGelen.Name = "UartGelen";
             UartGelen.Size = new Size(44, 15);
             UartGelen.TabIndex = 3;
             UartGelen.Text = "Uart Rx";
+            UartGelen.Visible = false;
             // 
             // UartGiden
             // 
             UartGiden.AutoSize = true;
-            UartGiden.Location = new Point(174, 192);
+            UartGiden.Location = new Point(193, 168);
             UartGiden.Name = "UartGiden";
             UartGiden.Size = new Size(43, 15);
             UartGiden.TabIndex = 3;
             UartGiden.Text = "Uart Tx";
+            UartGiden.Visible = false;
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(407, 126);
+            label4.Location = new Point(407, 102);
             label4.Name = "label4";
             label4.Size = new Size(64, 15);
             label4.TabIndex = 3;
@@ -212,7 +216,8 @@
             // 
             // progressBarCPUusage
             // 
-            progressBarCPUusage.Location = new Point(12, 220);
+            progressBarCPUusage.Location = new Point(12, 196);
+            progressBarCPUusage.MarqueeAnimationSpeed = 0;
             progressBarCPUusage.Name = "progressBarCPUusage";
             progressBarCPUusage.Size = new Size(340, 15);
             progressBarCPUusage.TabIndex = 0;
@@ -220,7 +225,7 @@
             // labelCPUUsage
             // 
             labelCPUUsage.AutoSize = true;
-            labelCPUUsage.Location = new Point(358, 220);
+            labelCPUUsage.Location = new Point(358, 196);
             labelCPUUsage.Name = "labelCPUUsage";
             labelCPUUsage.Size = new Size(29, 15);
             labelCPUUsage.TabIndex = 3;
@@ -229,7 +234,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(407, 220);
+            label6.Location = new Point(407, 196);
             label6.Name = "label6";
             label6.Size = new Size(82, 15);
             label6.TabIndex = 3;
@@ -237,7 +242,8 @@
             // 
             // progressBarGPUUsage
             // 
-            progressBarGPUUsage.Location = new Point(12, 254);
+            progressBarGPUUsage.Location = new Point(12, 230);
+            progressBarGPUUsage.MarqueeAnimationSpeed = 0;
             progressBarGPUUsage.Name = "progressBarGPUUsage";
             progressBarGPUUsage.Size = new Size(340, 15);
             progressBarGPUUsage.TabIndex = 0;
@@ -245,7 +251,7 @@
             // labelGPUUsage
             // 
             labelGPUUsage.AutoSize = true;
-            labelGPUUsage.Location = new Point(358, 254);
+            labelGPUUsage.Location = new Point(358, 230);
             labelGPUUsage.Name = "labelGPUUsage";
             labelGPUUsage.Size = new Size(29, 15);
             labelGPUUsage.TabIndex = 3;
@@ -254,7 +260,7 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(407, 254);
+            label9.Location = new Point(407, 230);
             label9.Name = "label9";
             label9.Size = new Size(83, 15);
             label9.TabIndex = 3;
@@ -263,24 +269,25 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(12, 192);
+            label5.Location = new Point(12, 168);
             label5.Name = "label5";
-            label5.Size = new Size(44, 15);
+            label5.Size = new Size(53, 15);
             label5.TabIndex = 3;
-            label5.Text = "Uart Rx";
+            label5.Text = "UART RX";
+            label5.Visible = false;
             // 
             // comboBoxCOMPORT
             // 
             comboBoxCOMPORT.FormattingEnabled = true;
-            comboBoxCOMPORT.Location = new Point(12, 283);
+            comboBoxCOMPORT.Location = new Point(12, 161);
             comboBoxCOMPORT.Name = "comboBoxCOMPORT";
-            comboBoxCOMPORT.Size = new Size(121, 23);
+            comboBoxCOMPORT.Size = new Size(62, 23);
             comboBoxCOMPORT.TabIndex = 4;
             // 
             // OBS_Durum
             // 
             OBS_Durum.AutoSize = true;
-            OBS_Durum.Location = new Point(369, 160);
+            OBS_Durum.Location = new Point(369, 136);
             OBS_Durum.Name = "OBS_Durum";
             OBS_Durum.Size = new Size(76, 15);
             OBS_Durum.TabIndex = 3;
@@ -289,7 +296,7 @@
             // labelStatusConnect
             // 
             labelStatusConnect.AutoSize = true;
-            labelStatusConnect.Location = new Point(242, 286);
+            labelStatusConnect.Location = new Point(144, 164);
             labelStatusConnect.Name = "labelStatusConnect";
             labelStatusConnect.Size = new Size(66, 15);
             labelStatusConnect.TabIndex = 3;
@@ -298,7 +305,7 @@
             // labelCPUcelcius
             // 
             labelCPUcelcius.AutoSize = true;
-            labelCPUcelcius.Location = new Point(345, 192);
+            labelCPUcelcius.Location = new Point(358, 168);
             labelCPUcelcius.Name = "labelCPUcelcius";
             labelCPUcelcius.Size = new Size(56, 15);
             labelCPUcelcius.TabIndex = 3;
@@ -307,7 +314,7 @@
             // labelGPUcelcius
             // 
             labelGPUcelcius.AutoSize = true;
-            labelGPUcelcius.Location = new Point(430, 192);
+            labelGPUcelcius.Location = new Point(430, 168);
             labelGPUcelcius.Name = "labelGPUcelcius";
             labelGPUcelcius.Size = new Size(56, 15);
             labelGPUcelcius.TabIndex = 3;
@@ -316,7 +323,7 @@
             // checkBox1
             // 
             checkBox1.AutoSize = true;
-            checkBox1.Location = new Point(369, 287);
+            checkBox1.Location = new Point(229, 163);
             checkBox1.Name = "checkBox1";
             checkBox1.Size = new Size(123, 19);
             checkBox1.TabIndex = 5;
@@ -326,7 +333,7 @@
             // 
             // buttonOBSbaglan
             // 
-            buttonOBSbaglan.Location = new Point(255, 156);
+            buttonOBSbaglan.Location = new Point(255, 132);
             buttonOBSbaglan.Name = "buttonOBSbaglan";
             buttonOBSbaglan.Size = new Size(108, 23);
             buttonOBSbaglan.TabIndex = 2;
@@ -334,22 +341,15 @@
             buttonOBSbaglan.UseVisualStyleBackColor = true;
             buttonOBSbaglan.Click += buttonOBSbaglan_Click;
             // 
-            // textBox1
-            // 
-            textBox1.Location = new Point(12, 312);
-            textBox1.Multiline = true;
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(477, 46);
-            textBox1.TabIndex = 6;
-            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(498, 364);
-            Controls.Add(textBox1);
-            Controls.Add(checkBox1);
+            ClientSize = new Size(498, 263);
             Controls.Add(comboBoxCOMPORT);
+            Controls.Add(labelStatusConnect);
+            Controls.Add(buttonBaglan);
+            Controls.Add(checkBox1);
             Controls.Add(label9);
             Controls.Add(labelGPUUsage);
             Controls.Add(OBS_Durum);
@@ -364,11 +364,9 @@
             Controls.Add(UartGelen);
             Controls.Add(label7);
             Controls.Add(label5);
-            Controls.Add(labelStatusConnect);
             Controls.Add(labelses);
             Controls.Add(label2);
             Controls.Add(label1);
-            Controls.Add(buttonBaglan);
             Controls.Add(buttonOBSbaglan);
             Controls.Add(buttonDurdur);
             Controls.Add(buttonDuraklat);
@@ -423,6 +421,5 @@
         private Label labelGPUcelcius;
         private CheckBox checkBox1;
         private Button buttonOBSbaglan;
-        private TextBox textBox1;
     }
 }

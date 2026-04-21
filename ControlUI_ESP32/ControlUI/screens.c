@@ -134,7 +134,7 @@ void create_screen_main() {
             lv_bar_set_range(obj, 0, 100);
             lv_bar_set_value(obj, 0, LV_ANIM_ON);
             lv_obj_set_style_bg_color(obj, lv_color_hex(0xff444444), LV_PART_MAIN | LV_STATE_DEFAULT);
-            lv_obj_set_style_bg_color(obj, lv_color_hex(0xff00aa44), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+            lv_obj_set_style_bg_color(obj, lv_color_hex(0x2196f3), LV_PART_INDICATOR | LV_STATE_DEFAULT);
         }
         {
             // TempChart

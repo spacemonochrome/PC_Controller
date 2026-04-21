@@ -48,9 +48,15 @@ namespace PCcontroller
         private bool _sliderDraggingBrightness = false;
         private ManagementEventWatcher? _brightnessWatcher;
 
+        // ── ESP32 cooldown: ESP32'den gelen set işlemlerinin
+        //    geri yansıyan event'lerini bastırır ────────────────
+        private DateTime _lastEsp32VolumeUpdate = DateTime.MinValue;
+        private DateTime _lastEsp32BrightnessUpdate = DateTime.MinValue;
+        private const int ESP32_COOLDOWN_MS = 300;
+
         // ── System Tray ───────────────────────────────────────
         private NotifyIcon _trayIcon = null!;
-        private bool _forceClose = false; // Tray "Kapat"tan geliyorsa true
+        private bool _forceClose = false;
 
         private bool _loading = true;
 
@@ -63,6 +69,7 @@ namespace PCcontroller
 
             checkBox1.Checked = IsStartupEnabled();
             _loading = false;
+
             // ── Donanım ──
             _pc = new Computer
             {
@@ -93,7 +100,7 @@ namespace PCcontroller
             // ── COM port ──
             LoadPorts();
             buttonBaglan.Enabled = comboBoxCOMPORT.Items.Count > 0;
-            buttonBaglan.Click += (_, _) => ToggleConnection();
+            buttonBaglan_Click(null, null);
 
             // ── OBS ──
             InitOBS();
@@ -137,7 +144,7 @@ namespace PCcontroller
 
             _trayIcon = new NotifyIcon
             {
-                Icon = this.Icon, // kendi ikonun varsa: new Icon("icon.ico")
+                Icon = this.Icon,
                 Text = "PC Controller",
                 Visible = true,
                 ContextMenuStrip = menu
@@ -154,7 +161,6 @@ namespace PCcontroller
             Activate();
         }
 
-        // Küçültünce tray'e göm
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
@@ -163,14 +169,6 @@ namespace PCcontroller
             {
                 Hide();
                 ShowInTaskbar = true;
-                /*
-                _trayIcon.ShowBalloonTip(
-                    1500,
-                    "PC Controller",
-                    "Arka planda çalışıyor. Geri açmak için çift tıkla.",
-                    ToolTipIcon.Info
-                );
-                */
             }
         }
 
@@ -223,6 +221,9 @@ namespace PCcontroller
         {
             if (IsDisposed || !IsHandleCreated) return;
 
+            // ESP32'den az önce set edildiyse bu echo event'i yok say
+            if ((DateTime.Now - _lastEsp32VolumeUpdate).TotalMilliseconds < ESP32_COOLDOWN_MS) return;
+
             BeginInvoke(() =>
             {
                 int yuzde = (int)(data.MasterVolume * 100);
@@ -257,6 +258,9 @@ namespace PCcontroller
         private void OnBrightnessChanged(object sender, EventArrivedEventArgs e)
         {
             if (IsDisposed || !IsHandleCreated) return;
+
+            // ESP32'den az önce set edildiyse bu echo event'i yok say
+            if ((DateTime.Now - _lastEsp32BrightnessUpdate).TotalMilliseconds < ESP32_COOLDOWN_MS) return;
 
             int yeniParlaklik = Convert.ToInt32(e.NewEvent["Brightness"]);
 
@@ -436,25 +440,6 @@ namespace PCcontroller
                 comboBoxCOMPORT.SelectedIndex = 0;
         }
 
-        private void ToggleConnection()
-        {
-            if (_port?.IsOpen == true)
-            {
-                Disconnect();
-                buttonBaglan.Text = "Bağlan";
-                _uartConnected = false;
-            }
-            else
-            {
-                if (comboBoxCOMPORT.SelectedItem == null) return;
-                Connect(comboBoxCOMPORT.SelectedItem.ToString()!);
-                buttonBaglan.Text = "Kes";
-                _uartConnected = true;
-            }
-
-            UpdateUIStatus();
-        }
-
         // ══════════════════════════════════════════════════════
         //  SERİ PORT
         // ══════════════════════════════════════════════════════
@@ -514,13 +499,14 @@ namespace PCcontroller
         private void Process(string msg)
         {
             UartGelen.Text = msg;
-            textBox1.AppendText(msg + Environment.NewLine);
-            labelStatusConnect.Text = _uartConnected ? "UART: CONNECTED" : "UART: DISCONNECTED";
+            //textBox1.AppendText(msg + Environment.NewLine);
+            labelStatusConnect.Text = _uartConnected ? "CONNECTED" : "DISCONNECTED";
 
             if (msg.Length < 3) return;
 
             if (!int.TryParse(msg[0].ToString(), out int ch)) return;
 
+            // OBS buton ACK'leri
             if (msg.Contains("T"))
             {
                 labelStatusConnect.Text = $"ACK {ch}";
@@ -538,21 +524,23 @@ namespace PCcontroller
 
             if (ch == 1)
             {
+                // Timestamp'i ÖNCE güncelle — SetMasterVolumeSafe hemen event fırlatabilir
+                _lastEsp32VolumeUpdate = DateTime.Now;
                 SetMasterVolumeSafe(val / 100f);
+
                 _volume = val;
-                _sliderDraggingVolume = true;
                 trackBarSes.Value = Math.Clamp(val, trackBarSes.Minimum, trackBarSes.Maximum);
                 labelses.Text = $"%{val}";
-                _sliderDraggingVolume = false;
             }
             else if (ch == 2)
             {
+                // Timestamp'i ÖNCE güncelle — SetBrightness hemen event fırlatabilir
+                _lastEsp32BrightnessUpdate = DateTime.Now;
                 SetBrightness(val);
+
                 _brightness = val;
-                _sliderDraggingBrightness = true;
                 trackBarEkran.Value = Math.Clamp(val, trackBarEkran.Minimum, trackBarEkran.Maximum);
                 labelekran.Text = $"%{val}";
-                _sliderDraggingBrightness = false;
             }
         }
 
@@ -752,7 +740,7 @@ namespace PCcontroller
         // ══════════════════════════════════════════════════════
         private void UpdateUIStatus()
         {
-            labelStatusConnect.Text = _uartConnected ? "UART: CONNECTED" : "UART: DISCONNECTED";
+            labelStatusConnect.Text = _uartConnected ? "CONNECTED" : "DISCONNECTED";
             OBS_Durum.Text = _obs?.IsConnected == true ? "OBS: BAĞLANDI" : "OBS: BAĞLI DEĞİL";
         }
 
@@ -777,16 +765,6 @@ namespace PCcontroller
         // ══════════════════════════════════════════════════════
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            // X butonuna basılınca kapat değil, tray'e küçült
-            /*
-            if (!_forceClose && e.CloseReason == CloseReason.UserClosing)
-            {
-                e.Cancel = true;
-                WindowState = FormWindowState.Minimized;
-                return;
-            }
-            */
-            // Gerçek kapatma (tray menüsü "Kapat" butonu)
             _sendTimer.Stop();
             _hwTimer.Stop();
 
@@ -815,10 +793,12 @@ namespace PCcontroller
             base.OnFormClosing(e);
         }
 
+        // ══════════════════════════════════════════════════════
+        //  WINDOWS BAŞLANGIÇ
+        // ══════════════════════════════════════════════════════
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             if (_loading) return;
-
             SetStartup(checkBox1.Checked);
         }
 
@@ -826,27 +806,21 @@ namespace PCcontroller
 
         private void SetStartup(bool enable)
         {
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(
-                @"Software\Microsoft\Windows\CurrentVersion\Run", true))
-            {
-                if (enable)
-                {
-                    key.SetValue(APP_NAME, Application.ExecutablePath);
-                }
-                else
-                {
-                    key.DeleteValue(APP_NAME, false);
-                }
-            }
+            using RegistryKey key = Registry.CurrentUser.OpenSubKey(
+                @"Software\Microsoft\Windows\CurrentVersion\Run", true)!;
+
+            if (enable)
+                key.SetValue(APP_NAME, Application.ExecutablePath);
+            else
+                key.DeleteValue(APP_NAME, false);
         }
 
         private bool IsStartupEnabled()
         {
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(
-                @"Software\Microsoft\Windows\CurrentVersion\Run", false))
-            {
-                return key.GetValue(APP_NAME) != null;
-            }
+            using RegistryKey key = Registry.CurrentUser.OpenSubKey(
+                @"Software\Microsoft\Windows\CurrentVersion\Run", false)!;
+
+            return key.GetValue(APP_NAME) != null;
         }
 
         protected override void OnLoad(EventArgs e)
@@ -861,5 +835,23 @@ namespace PCcontroller
             }
         }
 
+        private void buttonBaglan_Click(object sender, EventArgs e)
+        {
+            if (_port?.IsOpen == true)
+            {
+                Disconnect();
+                buttonBaglan.Text = "Bağlan";
+                _uartConnected = false;
+            }
+            else
+            {
+                if (comboBoxCOMPORT.SelectedItem == null) return;
+                Connect(comboBoxCOMPORT.SelectedItem.ToString()!);
+                buttonBaglan.Text = "Kes";
+                _uartConnected = true;
+            }
+
+            UpdateUIStatus();
+        }
     }
 }
