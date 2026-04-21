@@ -7,12 +7,12 @@
       "RelativeMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|solutionrelative:main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|solutionrelative:main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|c:\\users\\hfk47\\documents\\github\\pc_controller\\pccontroller_winui\\main.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|solutionrelative:main.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|solutionrelative:main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8A879F07-B0F4-040D-346C-BA87A2F787E3}|PCcontroller.csproj|c:\\users\\hfk47\\documents\\github\\pc_controller\\pccontroller_winui\\pccontroller.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
@@ -31,15 +31,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "PCcontroller",
+              "Title": "PCcontroller.csproj",
               "DocumentMoniker": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\PCcontroller.csproj",
               "RelativeDocumentMoniker": "PCcontroller.csproj",
               "ToolTip": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\PCcontroller.csproj",
               "RelativeToolTip": "PCcontroller.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-04-20T20:55:29.465Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-20T20:55:29.465Z"
             },
             {
               "$type": "Document",
@@ -49,27 +48,27 @@
               "RelativeDocumentMoniker": "Main.cs",
               "ToolTip": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\Main.cs",
               "RelativeToolTip": "Main.cs",
-              "ViewState": "AgIAAEQDAAAAAAAAAAAqwEoDAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAPABAAAAAAAAAAAQwAMCAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-20T20:33:45.018Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "Main.Designer.cs",
               "DocumentMoniker": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\Main.Designer.cs",
               "RelativeDocumentMoniker": "Main.Designer.cs",
               "ToolTip": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\Main.Designer.cs",
               "RelativeToolTip": "Main.Designer.cs",
-              "ViewState": "AgIAAGUBAAAAAAAAAAAQwHMBAAAeAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-20T20:33:45.052Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Main.cs [Tasar\u0131m]",
               "DocumentMoniker": "C:\\Users\\hfk47\\Documents\\GitHub\\PC_Controller\\PCcontroller_WinUI\\Main.cs",
               "RelativeDocumentMoniker": "Main.cs",

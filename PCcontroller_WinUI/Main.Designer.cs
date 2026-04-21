@@ -59,6 +59,7 @@
             labelGPUcelcius = new Label();
             checkBox1 = new CheckBox();
             buttonOBSbaglan = new Button();
+            textBox1 = new TextBox();
             ((System.ComponentModel.ISupportInitialize)trackBarSes).BeginInit();
             ((System.ComponentModel.ISupportInitialize)trackBarEkran).BeginInit();
             SuspendLayout();
@@ -333,11 +334,20 @@
             buttonOBSbaglan.UseVisualStyleBackColor = true;
             buttonOBSbaglan.Click += buttonOBSbaglan_Click;
             // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(12, 312);
+            textBox1.Multiline = true;
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(477, 46);
+            textBox1.TabIndex = 6;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(498, 319);
+            ClientSize = new Size(498, 364);
+            Controls.Add(textBox1);
             Controls.Add(checkBox1);
             Controls.Add(comboBoxCOMPORT);
             Controls.Add(label9);
@@ -413,5 +423,6 @@
         private Label labelGPUcelcius;
         private CheckBox checkBox1;
         private Button buttonOBSbaglan;
+        private TextBox textBox1;
     }
 }

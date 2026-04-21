@@ -1071,28 +1071,19 @@
           "2": {},
           "5": {},
           "13": {},
-<<<<<<< Updated upstream
           "17": {
             "$selected": true
           },
-=======
-          "17": {},
->>>>>>> Stashed changes
           "18": {},
           "19": {}
         }
       },
       "transform": {
         "translate": {
-<<<<<<< Updated upstream
           "x": -415.26378712498126,
           "y": -308.1713553444898
-=======
-          "x": -342.8959217171718,
-          "y": -149.12163510101024
->>>>>>> Stashed changes
         },
-        "scale": 0.67
+        "scale": 0.8
       },
       "timeline": {
         "isEditorActive": false,
@@ -1141,7 +1132,7 @@
   ],
   "showInactiveFlowsInDebugger": true,
   "globalFlowZoom": true,
-  "flowZoom": 0.67,
+  "flowZoom": 0.8,
   "implementationLanguage": "C++",
   "openDialogDefaultPath": "C:\\Users\\hfk47\\Desktop\\FontBottonsMusic-An02.ttf"
 }

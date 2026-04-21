@@ -47,6 +47,8 @@ typedef struct {
     lv_meter_indicator_t *indicator;
     lv_meter_scale_t *scale1;
     lv_meter_indicator_t *indicator1;
+    lv_chart_series_t *cpu_temp_series;
+    lv_chart_series_t *gpu_temp_series;
 } screen_main_state_t;
 
 extern screen_main_state_t screen_main_state;

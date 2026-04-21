@@ -126,13 +126,17 @@ void create_screen_main() {
             lv_label_set_text(obj, "Pil Seviyesi");
         }
         {
-            /*
             // PilProgressbar
             lv_obj_t *obj = lv_bar_create(parent_obj);
             objects.pil_progressbar = obj;
             lv_obj_set_pos(obj, 374, 132);
             lv_obj_set_size(obj, 600, 41);
-            */
+            lv_bar_set_range(obj, 0, 100);
+            lv_bar_set_value(obj, 0, LV_ANIM_ON);
+            lv_obj_set_style_bg_color(obj, lv_color_hex(0xff444444), LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_bg_color(obj, lv_color_hex(0xff00aa44), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+        }
+        {
             // TempChart
             lv_obj_t *obj = lv_chart_create(parent_obj);
             objects.temp_chart = obj;
@@ -154,6 +158,10 @@ void create_screen_main() {
                                 40);  // etiket alanı genişliği
             // Daha okunabilir çizgiler
             lv_chart_set_div_line_count(obj, 10, 0);
+
+            // Sıcaklık serileri — state'e kaydet (NULL kalırsa çökme olur)
+            state->cpu_temp_series = lv_chart_add_series(obj, lv_color_hex(0xffca2626), LV_CHART_AXIS_PRIMARY_Y);
+            state->gpu_temp_series = lv_chart_add_series(obj, lv_color_hex(0xff2672ca), LV_CHART_AXIS_PRIMARY_Y);
         }
         {
             lv_obj_t *obj = lv_label_create(parent_obj);
@@ -194,14 +202,6 @@ void create_screen_main() {
             lv_obj_set_style_text_decor(obj, LV_TEXT_DECOR_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
             lv_obj_set_style_text_color(obj, lv_color_hex(0xff2672ca), LV_PART_MAIN | LV_STATE_DEFAULT);
             lv_label_set_text(obj, "GPU Temp --°C");
-        }
-        {
-            // TempChart
-            lv_obj_t *obj = lv_chart_create(parent_obj);
-            objects.temp_chart = obj;
-            lv_obj_set_pos(obj, 512, 211);
-            lv_obj_set_size(obj, 500, 330);
-            lv_obj_clear_flag(obj, LV_OBJ_FLAG_CLICKABLE);
         }
         {
             // PilValue

@@ -514,6 +514,7 @@ namespace PCcontroller
         private void Process(string msg)
         {
             UartGelen.Text = msg;
+            textBox1.AppendText(msg + Environment.NewLine);
             labelStatusConnect.Text = _uartConnected ? "UART: CONNECTED" : "UART: DISCONNECTED";
 
             if (msg.Length < 3) return;

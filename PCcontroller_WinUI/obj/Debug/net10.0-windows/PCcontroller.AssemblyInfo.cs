@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PCcontroller")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e6633ada70132cfd3f9cc19de77fdd288499b2c1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+167e39358d64f43f64e562bbfbf929e1c93086dd")]
 [assembly: System.Reflection.AssemblyProductAttribute("PCcontroller")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PCcontroller")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
