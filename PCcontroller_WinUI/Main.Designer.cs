@@ -122,7 +122,7 @@
             // buttonBaglan
             // 
             buttonBaglan.Enabled = false;
-            buttonBaglan.Location = new Point(80, 160);
+            buttonBaglan.Location = new Point(79, 164);
             buttonBaglan.Name = "buttonBaglan";
             buttonBaglan.Size = new Size(58, 23);
             buttonBaglan.TabIndex = 2;
@@ -279,7 +279,7 @@
             // comboBoxCOMPORT
             // 
             comboBoxCOMPORT.FormattingEnabled = true;
-            comboBoxCOMPORT.Location = new Point(12, 161);
+            comboBoxCOMPORT.Location = new Point(11, 164);
             comboBoxCOMPORT.Name = "comboBoxCOMPORT";
             comboBoxCOMPORT.Size = new Size(62, 23);
             comboBoxCOMPORT.TabIndex = 4;
@@ -296,7 +296,7 @@
             // labelStatusConnect
             // 
             labelStatusConnect.AutoSize = true;
-            labelStatusConnect.Location = new Point(144, 164);
+            labelStatusConnect.Location = new Point(143, 168);
             labelStatusConnect.Name = "labelStatusConnect";
             labelStatusConnect.Size = new Size(66, 15);
             labelStatusConnect.TabIndex = 3;
@@ -305,7 +305,7 @@
             // labelCPUcelcius
             // 
             labelCPUcelcius.AutoSize = true;
-            labelCPUcelcius.Location = new Point(358, 168);
+            labelCPUcelcius.Location = new Point(368, 168);
             labelCPUcelcius.Name = "labelCPUcelcius";
             labelCPUcelcius.Size = new Size(56, 15);
             labelCPUcelcius.TabIndex = 3;
@@ -323,7 +323,7 @@
             // checkBox1
             // 
             checkBox1.AutoSize = true;
-            checkBox1.Location = new Point(229, 163);
+            checkBox1.Location = new Point(239, 166);
             checkBox1.Name = "checkBox1";
             checkBox1.Size = new Size(123, 19);
             checkBox1.TabIndex = 5;

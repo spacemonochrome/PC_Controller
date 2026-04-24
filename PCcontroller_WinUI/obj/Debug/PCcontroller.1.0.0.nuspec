@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>PCcontroller</id>
+    <version>1.0.0</version>
+    <authors>PCcontroller</authors>
+    <icon>logo.png</icon>
+    <description>Package Description</description>
+    <repository type="git" commit="af34dac711e01d0c9b27741354b2d0ac593d4eaf" />
+    <dependencies>
+      <group targetFramework="net10.0-windows7.0">
+        <dependency id="LibreHardwareMonitorLib" version="0.9.6" exclude="Build,Analyzers" />
+        <dependency id="NAudio" version="2.3.0" exclude="Build,Analyzers" />
+        <dependency id="obs-websocket-dotnet" version="5.0.1" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <frameworkReferences>
+      <group targetFramework="net10.0-windows7.0">
+        <frameworkReference name="Microsoft.WindowsDesktop.App.WindowsForms" />
+      </group>
+    </frameworkReferences>
+    <contentFiles>
+      <files include="any/net10.0-windows7.0/logo.ico" buildAction="Content" />
+    </contentFiles>
+  </metadata>
+  <files>
+    <file src="C:\Users\hfk47\Documents\GitHub\PC_Controller\PCcontroller_WinUI\bin\Debug\net10.0-windows\PCcontroller.runtimeconfig.json" target="lib\net10.0-windows7.0\PCcontroller.runtimeconfig.json" />
+    <file src="C:\Users\hfk47\Documents\GitHub\PC_Controller\PCcontroller_WinUI\bin\Debug\net10.0-windows\PCcontroller.dll" target="lib\net10.0-windows7.0\PCcontroller.dll" />
+    <file src="C:\Users\hfk47\Documents\GitHub\PC_Controller\PCcontroller_WinUI\logo.ico" target="content\logo.ico" />
+    <file src="C:\Users\hfk47\Documents\GitHub\PC_Controller\PCcontroller_WinUI\logo.ico" target="contentFiles\any\net10.0-windows7.0\logo.ico" />
+    <file src="C:\Users\hfk47\Documents\GitHub\PC_Controller\logo.png" target="\logo.png" />
+  </files>
+</package>

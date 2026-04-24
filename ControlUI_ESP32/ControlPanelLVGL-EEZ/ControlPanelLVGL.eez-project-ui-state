@@ -189,7 +189,7 @@
             {
               "type": "tabset",
               "id": "EDITORS",
-              "weight": 49.800482261413556,
+              "weight": 48.160469602335546,
               "selected": 1,
               "enableDeleteWhenEmpty": false,
               "enableClose": false,
@@ -223,7 +223,7 @@
             {
               "type": "tabset",
               "id": "#3700bc9b-3c8d-4fa5-bb5e-25fa6dfab302",
-              "weight": 9.854640859269468,
+              "weight": 9.384724917821018,
               "children": [
                 {
                   "type": "tab",
@@ -238,7 +238,7 @@
             {
               "type": "tabset",
               "id": "#84557577-a80b-4000-9ab6-98e6976533d9",
-              "weight": 23.698064923481336,
+              "weight": 25.807993524007795,
               "children": [
                 {
                   "type": "tab",
@@ -1066,12 +1066,12 @@
       "selectionFront": {},
       "selectionBack": {
         "0": {
-          "0": {},
-          "2": {},
-          "5": {},
-          "8": {
+          "0": {
             "$selected": true
           },
+          "2": {},
+          "5": {},
+          "8": {},
           "13": {},
           "17": {},
           "18": {},
@@ -1080,8 +1080,8 @@
       },
       "transform": {
         "translate": {
-          "x": -415.26378712498126,
-          "y": -308.1713553444898
+          "x": -383.26378712498126,
+          "y": -249.17135534448983
         },
         "scale": 0.8
       },
@@ -1129,7 +1129,11 @@
   "lvglState": "DEFAULT",
   "lvglExpandedPropertiesGroup": [
     "MARGIN",
-    "BACKGROUND"
+    "LINE",
+    "ARC",
+    "TEXT",
+    "MISCELLANEOUS",
+    "IMAGE"
   ],
   "showInactiveFlowsInDebugger": true,
   "globalFlowZoom": true,

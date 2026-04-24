@@ -80,16 +80,16 @@ void create_screen_main() {
             // CPUUsageValue
             lv_obj_t *obj = lv_meter_create(parent_obj);
             objects.cpu_usage_value = obj;
-            lv_obj_set_pos(obj, 22, 211);
-            lv_obj_set_size(obj, 180, 180);
+            lv_obj_set_pos(obj, 12, 189);
+            lv_obj_set_size(obj, 220, 220);
             {
                 lv_meter_scale_t *scale = lv_meter_add_scale(obj);
                 state->scale = scale;
-                lv_meter_set_scale_ticks(obj, scale, 41, 1, 5, lv_color_hex(0xffa0a0a0));
-                lv_meter_set_scale_major_ticks(obj, scale, 8, 3, 10, lv_color_hex(0xff000000), 10);
+                lv_meter_set_scale_ticks(obj, scale, 41, 5, 5, lv_color_hex(0xffa0a0a0));
+                lv_meter_set_scale_major_ticks(obj, scale, 8, 4, 10, lv_color_hex(0xff000000), 10);
                 lv_meter_set_scale_range(obj, scale, 0, 100, 300, 120);
                 {
-                    lv_meter_indicator_t *indicator = lv_meter_add_needle_line(obj, scale, 3, lv_color_hex(0xffff0000), -28);
+                    lv_meter_indicator_t *indicator = lv_meter_add_needle_line(obj, scale, 5, lv_color_hex(0xffff0000), -28);
                     state->indicator = indicator;
                     lv_meter_set_indicator_value(obj, indicator, 0);
                 }
@@ -100,16 +100,16 @@ void create_screen_main() {
             // GPUUsageValue
             lv_obj_t *obj = lv_meter_create(parent_obj);
             objects.gpu_usage_value = obj;
-            lv_obj_set_pos(obj, 284, 211);
-            lv_obj_set_size(obj, 180, 180);
+            lv_obj_set_pos(obj, 268, 189);
+            lv_obj_set_size(obj, 220, 220);
             {
                 lv_meter_scale_t *scale = lv_meter_add_scale(obj);
                 state->scale1 = scale;
-                lv_meter_set_scale_ticks(obj, scale, 41, 1, 5, lv_color_hex(0xffa0a0a0));
-                lv_meter_set_scale_major_ticks(obj, scale, 8, 3, 10, lv_color_hex(0xff000000), 10);
+                lv_meter_set_scale_ticks(obj, scale, 41, 5, 5, lv_color_hex(0xffa0a0a0));
+                lv_meter_set_scale_major_ticks(obj, scale, 8, 4, 10, lv_color_hex(0xff000000), 10);
                 lv_meter_set_scale_range(obj, scale, 0, 100, 300, 120);
                 {
-                    lv_meter_indicator_t *indicator = lv_meter_add_needle_line(obj, scale, 3, lv_color_hex(0xff2672ca), -28);
+                    lv_meter_indicator_t *indicator = lv_meter_add_needle_line(obj, scale, 5, lv_color_hex(0xff2672ca), -28);
                     state->indicator1 = indicator;
                     lv_meter_set_indicator_value(obj, indicator, 0);
                 }

@@ -456,5 +456,5 @@ void loop()
         lvgl_port_unlock();
     }
 
-    delay(1);
+    //delay(1);
 }

@@ -649,7 +649,7 @@ namespace PCcontroller
                             hw.HardwareType == HardwareType.GpuIntel)
                         {
                             if (s.SensorType == SensorType.Load)
-                                gpuL = (int)s.Value;
+                                gpuL = Math.Max(gpuL, (int)s.Value);
 
                             if (s.SensorType == SensorType.Temperature)
                                 gpuT = Math.Max(gpuT, (int)s.Value);
